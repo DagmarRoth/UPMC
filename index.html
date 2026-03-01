@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="When the Algorithm Was Supposed to Save Lives, Deaths Rose Instead">
+    <meta property="og:description" content="How UPMC's AI surgical prediction tool failed to prevent rising death rates">
+    <meta property="og:image" content="excess_deaths_waffle_grid.png">
+    <title>When the Algorithm Was Supposed to Save Lives, Deaths Rose Instead</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1a1a1a;
+            background: #faf9f7;
+            line-height: 1.7;
+        }
+
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, #1a0a0a 0%, #2d1010 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 90%;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 30px;
+        }
+
+        .hero-byline {
+            font-size: 14px;
+            color: #bbb;
+            margin-bottom: 8px;
+        }
+
+        .hero-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        /* Main content */
+        .content-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 60px 30px;
+        }
+
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+
+        p {
+            margin-bottom: 12px;
+            font-size: 16px;
+            line-height: 1.75;
+            color: #333;
+        }
+
+        /* Stat callout */
+        .stat-callout {
+            background: #c0392b;
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+            margin: 60px 0;
+            font-size: 22px;
+            font-weight: 500;
+            line-height: 1.6;
+            border-radius: 2px;
+        }
+
+        .stat-callout strong {
+            display: block;
+            font-size: 42px;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        /* Chart sections */
+        .chart-section {
+            margin: 100px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .chart-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chart-wrapper {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .chart-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .chart-caption {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+
+        /* Footer */
+        footer {
+            background: #0f0f0f;
+            color: #999;
+            padding: 60px 30px;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .footer-source {
+            margin-top: 20px;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+        }
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .slide-left {
+            opacity: 0;
+            transform: translateX(-40px);
+        }
+
+        .slide-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .slide-right {
+            opacity: 0;
+            transform: translateX(40px);
+        }
+
+        .slide-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                padding: 40px 20px;
+            }
+
+            .section h2 {
+                font-size: 1.8rem;
+            }
+
+            .stat-callout {
+                padding: 30px 20px;
+                font-size: 18px;
+            }
+
+            .stat-callout strong {
+                font-size: 32px;
+            }
+
+            .pull-quote {
+                padding: 40px 25px;
+                font-size: 16px;
+            }
+
+            .chart-wrapper {
+                padding: 15px;
+            }
+
+            p {
+                font-size: 15px;
+            }
+        }
+
+        em {
+            font-style: italic;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>When the Algorithm Was Supposed to Save Lives, Deaths Rose Instead</h1>
+            <p class="hero-byline">By Dagmar Rothschild</p>
+            <p class="hero-date">Published March 2025</p>
+        </div>
+        <div class="scroll-indicator">
+            <svg viewBox="0 0 24 24">
+                <polyline points="12 5 12 19"></polyline>
+                <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <!-- Intro Section -->
+        <section class="section fade-in">
+            <p>In 2019, UPMC quietly rolled out what it called a breakthrough. The Pittsburgh-based health giant had spent years building a machine learning algorithm, trained on records from more than 1.25 million patients, designed to predict which surgical patients were most likely to die or suffer a serious complication. Deployed across 20 of its hospitals, the tool would scan patient charts each morning and flag the highest-risk cases before surgeons ever made the first incision. The goal, according to Dr. Aman Mahajan, the algorithm's lead architect, was to give clinicians "a more objective, data-driven assessment of who might run into trouble after surgery."</p>
+
+            <p>The data suggests that assessment was not enough.</p>
+        </section>
+
+
+        <!-- The Rise Section -->
+        <section class="section chart-section slide-right">
+            <h2>The Rise</h2>
+
+            <p>Federal records show that in the years following the algorithm's deployment, the rate of deaths among surgical patients who experienced serious but treatable complications climbed sharply across UPMC's hospitals. At UPMC Altoona, the rate rose from 161 deaths per 1,000 such patients in the 2019–2021 period to 259 by 2022–2024, a 61 percent increase that now ranks Altoona first in the country for this measure, the highest PSI-04 mortality rate of any of the 1,524 hospitals reporting to CMS in the most recent data. UPMC Hamot rose from 158 to 234, and UPMC Mercy from 169 to 234, both ranking in the top 15 nationally.</p>
+
+            <p>Across the UPMC system, the rate climbed from 149 to 195, well above both the Pennsylvania state average and the national benchmark, each of which rose only modestly over the same period.</p>
+
+            <div class="chart-wrapper">
+                <img src="jUVf5-deaths-from-surgical-complications-skyrocket-at-upmc-hospitals- (1).png" alt="Chart showing mortality rates rising from 2019-2021 to 2022-2024" loading="lazy">
+            </div>
+        </section>
+
+        <!-- PSI-04 Section -->
+        <section class="section fade-in">
+            <p>The measure, PSI-04, tracked by the Centers for Medicare and Medicaid Services, is designed specifically to capture deaths that should not have happened. It counts surgical patients who develop a serious complication and then die, with the underlying assumption that these are deaths medicine had a chance to prevent. Dr. Mahajan, in an interview, acknowledged the weight of that framing. "PSI-04 focuses on patients who developed serious complications and then died, cases where medicine, theoretically, had an opportunity to intervene," he said. "When that number increases, it raises a fundamental question: Were high-risk patients identified but not effectively managed? Or were the interventions insufficient? Prediction is only the first step. What matters is what happens after the risk is identified."</p>
+        </section>
+
+        <!-- The Gap Section -->
+        <section class="section fade-in">
+            <p>In theory, the tool was designed to trigger a chain of action. Each morning, surgical teams would receive a list of flagged patients, prompting, as Dr. Mahajan described it, "heightened vigilance, perhaps additional monitoring, consultations, or changes to surgical planning." But he acknowledged the gap between alert and outcome is not automatic. "An algorithm can demonstrate strong predictive accuracy, but that does not automatically improve outcomes. There has to be a clear workflow: Who responds to the alert? What resources are mobilized? Is there adequate staffing to act on those warnings? Without an effective response system, prediction alone does not save lives."</p>
+        </section>
+
+        <!-- Excess Deaths Section -->
+        <section class="section chart-section slide-left">
+            <h2>The Gap</h2>
+
+            <p>UPMC has not responded to questions about the divergence between the algorithm's promised outcomes and its hospitals' PSI-04 trajectory. One defense the health system might offer is that its patients are simply becoming sicker and more complex over time. Dr. Mahajan pushed back on that framing. "PSI-04 is risk-adjusted," he said. "It's designed to account for underlying illness. If rates are rising substantially above state and national benchmarks, it suggests there may be structural factors at play beyond patient mix alone."</p>
+
+            <div class="chart-wrapper">
+                <img src="excess_deaths_waffle_grid.png" alt="Waffle chart showing excess deaths by healthcare system compared to US benchmark" loading="lazy">
+                <p class="chart-caption">Each square represents 1 excess death per 100,000 patients compared to the US national benchmark</p>
+            </div>
+        </section>
+
+        <!-- Conclusion -->
+        <section class="section fade-in">
+            <p>His broader conclusion was pointed. "AI is a tool, not a solution," he said. "If a hospital system promotes AI as a safety breakthrough, it also assumes responsibility for demonstrating that it improves real-world outcomes. Otherwise, we risk mistaking predictive sophistication for clinical effectiveness."</p>
+
+            <p>For the patients counted in rising mortality rates, that distinction is not academic.</p>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-source">
+            Source: CMS Hospital Compare, PSI-04, 2019–2024
+            <br>
+            <br>
+            Data represents mortality rate among surgical inpatients with serious treatable complications. Analysis limited to Pennsylvania hospitals with publicly available CMS data. Charts created from hospital-level PSI-04 metrics.
+        </div>
+    </footer>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animatable elements
+        document.querySelectorAll('.fade-in, .slide-left, .slide-right, .chart-section').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
