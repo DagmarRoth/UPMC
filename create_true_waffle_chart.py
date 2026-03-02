@@ -106,11 +106,10 @@ ax.set_ylim(y_start - (len(excess_deaths_data) * row_height) - 1, y_start + 1)
 ax.set_aspect('equal')
 ax.axis('off')
 
-# Title and subtitle - centered on axis, not figure
-center_x = (label_x - 0.3 + cols + 2) / 2  # Center of xlim
-ax.text(center_x, y_start + 4.2, 'EXCESS DEATHS PER 100,000 PATIENTS',
+# Title and subtitle - centered on waffle grid
+ax.text(9.5, y_start + 4.2, 'EXCESS DEATHS PER 100,000 PATIENTS',
         ha='center', fontsize=18, fontweight='bold', color='#1a1a1a')
-ax.text(center_x, y_start + 2.2, 'Surgical Inpatients with Serious Treatable Complications',
+ax.text(9.5, y_start + 2.2, 'Surgical Inpatients with Serious Treatable Complications',
         ha='center', fontsize=12, style='italic', color='#666')
 
 # Footer note
